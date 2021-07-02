@@ -1,28 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-import { GetServerSideProps, NextPage } from 'next'
-
+import { GetServerSideProps, NextPage } from 'next';
 import { v4 as uuid } from 'uuid';
 
-import { useType } from '~/hooks/useType';
-import { generateWords } from '~/utils/generateWords';
-
-import Typer from '~/components/Typer';
 import Header from '~/components/Header';
+import Typer from '~/components/Typer';
+import { generateWords } from '~/utils/generateWords';
 
 export interface IWord {
   id: string;
-  value: string
+  value: string;
 }
 
 type IHomeProps = {
   words: IWord[];
-}
+};
 
-const Home: NextPage<IHomeProps> = ({words: serverWords}) => {
-  const [words, setWords] = useState(serverWords);
+const Home: NextPage<IHomeProps> = ({ words: serverWords }) => {
+  const [words, _setWords] = useState(serverWords);
 
-  
   return (
     <div className={`w-screen h-screen flex flex-col`}>
       <Header />
@@ -31,21 +27,21 @@ const Home: NextPage<IHomeProps> = ({words: serverWords}) => {
       </div>
     </div>
   );
-}
+};
 
 export const getServerSideProps: GetServerSideProps<IHomeProps> = async () => {
   const wordsData = generateWords(20);
-  
-  const words: IWord[] = wordsData.map(word => ({
+
+  const words: IWord[] = wordsData.map((word) => ({
     id: uuid(),
     value: word,
-  }))
+  }));
 
   return {
     props: {
       words,
-    }
-  }
-}
+    },
+  };
+};
 
 export default Home;
