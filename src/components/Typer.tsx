@@ -1,49 +1,12 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React from 'react';
 
 import { AnimateSharedLayout, motion } from 'framer-motion';
 
-import { useType } from '~/hooks/useType';
-import { IWord } from '~/pages';
+import { IWord, useType } from '~/hooks/useType';
 
 const Typer: React.VFC<{ words: IWord[] }> = ({ words }) => {
-  const [startTime, setStartTime] = useState<number>();
-  const [wpm, setWpm] = useState<string>('0');
-
-  const [pastWords, setPastWords] = useState<IWord[]>([]);
-  const [activeWord, setActiveWord] = useState<number>(0);
-  const [activeChar, setActiveChar] = useState(0);
-
-  const { pressed } = useType();
-
-  const nextWords = useMemo(() => {
-    return words.slice(pastWords.length + 1);
-  }, [pastWords, words]);
-
-  useEffect(() => {
-    if (pressed?.key === words[activeWord].value[activeChar]) {
-      if (!startTime) {
-        setStartTime(new Date().getTime());
-      }
-      setActiveChar(activeChar + 1);
-    }
-
-    if (
-      activeChar >= words[activeWord].value.length &&
-      pressed.code === 'Space'
-    ) {
-      const deltaTime = (new Date().getTime() - startTime) / 60000;
-
-      console.log(activeWord);
-
-      setWpm(((activeWord + 1) / deltaTime).toFixed(1));
-
-      setPastWords((oldState) => [...oldState, words[activeWord]]);
-
-      setActiveWord((oldState) => oldState + 1);
-
-      setActiveChar(0);
-    }
-  }, [pressed]);
+  const { pastWords, nextWords, activeWord, activeChar, wrongChars, wpm } =
+    useType(words);
 
   return (
     <AnimateSharedLayout>
@@ -65,7 +28,7 @@ const Typer: React.VFC<{ words: IWord[] }> = ({ words }) => {
               {index === activeChar && (
                 <motion.span
                   layoutId="cursor"
-                  className={`h-7 rounded-2xl w-1 bg-primary animate-blink font-thin text-2xl m-0`}
+                  className={`h-7 relative rounded-2xl w-1 bg-primary animate-blink font-thin text-2xl m-0`}
                   transition={{
                     type: 'spring',
                     stiffness: 500,
@@ -74,7 +37,13 @@ const Typer: React.VFC<{ words: IWord[] }> = ({ words }) => {
                   }}
                 />
               )}
-              <p className={`text-2xl text-text font-mono`}>{letter}</p>
+              <p
+                className={`text-2xl text-text font-mono ${
+                  wrongChars.includes(index) && 'text-accent'
+                }`}
+              >
+                {letter}
+              </p>
             </div>
           ))}
 

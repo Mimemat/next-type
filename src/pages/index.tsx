@@ -5,12 +5,8 @@ import { v4 as uuid } from 'uuid';
 
 import Header from '~/components/Header';
 import Typer from '~/components/Typer';
+import { IWord } from '~/hooks/useType';
 import { generateWords } from '~/utils/generateWords';
-
-export interface IWord {
-  id: string;
-  value: string;
-}
 
 type IHomeProps = {
   words: IWord[];

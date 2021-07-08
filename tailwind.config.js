@@ -22,7 +22,8 @@ module.exports = {
       primary: {
         dark: 'var(--color-primary-light)',
         DEFAULT: 'var(--color-primary)',
-      }
+      },
+      accent: 'var(--color-accent)'
     },
     extend: {
       keyframes: {

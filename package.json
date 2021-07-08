@@ -11,6 +11,7 @@
     "faker": "^5.5.3",
     "framer-motion": "^4.1.17",
     "next": "10.2.3",
+    "next-images": "^1.8.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "uuid": "^8.3.2"
@@ -23,6 +24,7 @@
     "@typescript-eslint/eslint-plugin": "^4.28.1",
     "@typescript-eslint/parser": "^4.28.1",
     "autoprefixer": "^10.2.6",
+    "babel-plugin-inline-react-svg": "^2.0.1",
     "eslint": "^7.29.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.3.0",
