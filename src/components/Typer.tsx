@@ -28,7 +28,8 @@ const Typer: React.VFC<{ words: IWord[] }> = ({ words }) => {
               {index === activeChar && (
                 <motion.span
                   layoutId="cursor"
-                  className={`h-7 relative rounded-2xl w-1 bg-primary animate-blink font-thin text-2xl m-0`}
+                  style={{ width: '0.2rem' }}
+                  className={`h-7 relative rounded-2xl bg-primary animate-blink font-thin text-2xl m-0`}
                   transition={{
                     type: 'spring',
                     stiffness: 500,
