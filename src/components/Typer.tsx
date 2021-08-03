@@ -4,9 +4,20 @@ import { AnimateSharedLayout, motion } from 'framer-motion';
 
 import { IWord, useType } from '~/hooks/useType';
 
+import Statistics from './Statistics';
+
 const Typer: React.VFC<{ words: IWord[] }> = ({ words }) => {
-  const { pastWords, nextWords, activeWord, activeChar, wrongChars, wpm } =
-    useType(words);
+  const {
+    hasEnded,
+    pastWords,
+    nextWords,
+    activeWord,
+    activeChar,
+    wrongChars,
+    wpm,
+  } = useType(words);
+
+  if (hasEnded) return <Statistics wpm={wpm} />;
 
   return (
     <AnimateSharedLayout>
@@ -28,7 +39,7 @@ const Typer: React.VFC<{ words: IWord[] }> = ({ words }) => {
               {index === activeChar && (
                 <motion.span
                   layoutId="cursor"
-                  style={{ width: '0.2rem' }}
+                  style={{ width: '0.1rem' }}
                   className={`h-7 relative rounded-2xl bg-primary animate-blink font-thin text-2xl m-0`}
                   transition={{
                     type: 'spring',

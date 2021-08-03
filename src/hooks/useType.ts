@@ -9,6 +9,7 @@ export interface IWord {
 
 type useTypeReturn = {
   pastWords: IWord[];
+  hasEnded: boolean;
   nextWords: IWord[];
   wpm: string;
   activeWord: number;
@@ -17,12 +18,22 @@ type useTypeReturn = {
 };
 
 export const useType = (words: IWord[]): useTypeReturn => {
-  const [startTime, setStartTime] = useState<number>();
+  const [startTime, setStartTime] = useState<number>(null);
+  const [hasEnded, setHasEnded] = useState(false);
   const [wpm, setWpm] = useState<string>('0');
 
   const [activeWord, setActiveWord] = useState<number>(0);
 
   const [activeChar, setActiveChar] = useState(0);
+
+  const nextWords = useMemo(() => {
+    return words.slice(activeWord + 1);
+  }, [activeWord, words]);
+
+  const pastWords = useMemo(() => {
+    return words.slice(0, activeWord);
+  }, [activeWord, words]);
+
   const [wrongChars, setWrongChars] = useState<number[]>([]);
 
   useInterval(
@@ -36,29 +47,25 @@ export const useType = (words: IWord[]): useTypeReturn => {
 
       const characterNumber = pastWordsLength + activeChar - wrongChars.length;
 
-      setWpm((characterNumber / 4.5 / deltaTime).toFixed(1));
+      setWpm((characterNumber / 5 / deltaTime).toFixed(1));
     },
     startTime ? 1000 : null
   );
 
-  const nextWords = useMemo(() => {
-    return words.slice(activeWord + 1);
-  }, [activeWord, words]);
-
-  const pastWords = useMemo(() => {
-    return words.slice(0, activeWord);
-  }, [activeWord, words]);
-
   const handlePressSpace = useCallback(() => {
-    if (
-      activeChar + 1 === words[activeWord].value.length &&
-      wrongChars.length === 0
-    ) {
-      setWrongChars([]);
+    if (activeChar + 1 === words[activeWord].value.length) {
+      console.log(activeWord, words.length);
+      if (activeWord === words.length - 1) {
+        setStartTime(null);
+        return setHasEnded(true);
+      }
+      if (wrongChars.length === 0) {
+        setWrongChars([]);
 
-      setActiveWord((oldState) => oldState + 1);
+        setActiveWord((oldState) => oldState + 1);
 
-      setActiveChar(0);
+        setActiveChar(0);
+      }
     }
   }, [activeChar, words, activeWord, wrongChars]);
 
@@ -122,5 +129,6 @@ export const useType = (words: IWord[]): useTypeReturn => {
     activeChar,
     activeWord,
     wrongChars,
+    hasEnded,
   };
 };
